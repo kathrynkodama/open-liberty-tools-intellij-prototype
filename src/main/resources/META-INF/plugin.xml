@@ -1,0 +1,72 @@
+<idea-plugin>
+    <id>open-liberty.intellij-plugin</id>
+    <name>Open Liberty Tools</name>
+    <vendor email="support@yourcompany.com" url="https://github.com/OpenLiberty">Open Liberty</vendor>
+
+    <description><![CDATA[
+    Open Liberty Tools is an IntelliJ extension that detects your Open Liberty projects and allow you to
+     interact with dev mode via the provided dashboard.<br>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow anchor="right" id="Liberty Dev Dashboard" icon="/icons/OL_logo_13.svg"
+                    factoryClass="org.liberty.intellij.LibertyDevToolWindowFactory"/>
+    </extensions>
+
+
+    <actions>
+
+<!--        <action id="org.intellij.sdk.action.PopupDialogAction"-->
+<!--                class="org.intellij.sdk.action.PopupDialogAction" text="Pop Dialog Action"-->
+<!--                description="SDK action example">-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+<!--        </action>-->
+
+<!--        <group id="org.intellij.sdk.action.GroupedActions" text="Static Grouped Actions" popup="true" >-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.PopupDialogAction"/>-->
+<!--            <action class="org.intellij.sdk.action.PopupDialogAction" id="org.intellij.sdk.action.GroupPopDialogAction"-->
+<!--                    text="A Group Action" description="SDK static grouped action example" >-->
+<!--            </action>-->
+<!--        </group>-->
+
+<!--        <group id="org.intellij.sdk.action.CustomDefaultActionGroup" class="org.intellij.sdk.action.CustomDefaultActionGroup" popup="true"-->
+<!--               text="Popup Grouped Actions" description="Custom defaultActionGroup demo">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
+<!--            <action class="org.intellij.sdk.action.PopupDialogAction" id="org.intellij.sdk.action.CustomGroupedAction"-->
+<!--                    text="A Popup Action" description="SDK popup grouped action example" />-->
+<!--        </group>-->
+
+<!--        <group id="org.intellij.sdk.action.DynamicActionGroup" class="org.intellij.sdk.action.DynamicActionGroup" popup="true"-->
+<!--               text="Dynamically Grouped Actions" description="SDK dynamically grouped action example" >-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.GroupedActions"/>-->
+<!--        </group>-->
+
+        <action id="org.liberty.intellij.actions.LibertyDevStartAction"
+                class="org.liberty.intellij.actions.LibertyDevStartAction" text="Start"
+                description="Start Liberty Dev on current build file" icon="AllIcons.General.GearPlain" />
+
+        <action id="org.liberty.intellij.actions.LibertyDevCustomStartAction"
+                class="org.liberty.intellij.actions.LibertyDevCustomStartAction" text="Start..."
+                description="Custom Start Liberty Dev on current build file" icon="AllIcons.General.GearPlain" />
+
+        <action id="org.liberty.intellij.actions.LibertyDevStopAction"
+                class="org.liberty.intellij.actions.LibertyDevStopAction" text="Stop"
+                description="Stop Liberty Dev on current build file" icon="AllIcons.General.GearPlain" />
+
+        <action id="org.liberty.intellij.actions.LibertyDevRunTestsAction"
+                class="org.liberty.intellij.actions.LibertyDevRunTestsAction" text="Run Tests"
+                description="Run tests on current build file" icon="AllIcons.General.GearPlain" />
+        <action id="org.liberty.intellij.actions.ViewEffectivePom"
+                class="org.liberty.intellij.actions.ViewEffectivePom" text="View effective pom"
+                description="Open the pom.xml" icon="AllIcons.General.GearPlain" />
+        <action id="org.liberty.intellij.actions.RefreshLibertyToolbar"
+                class="org.liberty.intellij.actions.RefreshLibertyToolbar" text="Refresh Liberty Dev Dashboard"
+                description="Refresh Liberty Dev Dashboard proejcts" icon="AllIcons.Actions.Refresh"/>
+    </actions>
+</idea-plugin>
