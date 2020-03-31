@@ -7,16 +7,15 @@ stop, or interact with Liberty dev mode on all available
 
 Note that this extension requires the [Integrated Terminal plugin](https://plugins.jetbrains.com/plugin/13123-terminal) to be enabled.
 
-## Build
-
-Execute the following Gradle task to build and execute an IntelliJ instance:
-`./gradlew runIde`
 
 ## Developing
 The project is built using the built in [gradle-intellij-plugin](https://github.com/JetBrains/gradle-intellij-plugin/).
 
-1. Clone this repository: `git clone `
+1. Clone this repository: `git clone git@github.com:kathrynkodama/open-liberty-tools-intellij.git`
 2. Import this repository as a gradle project in IntelliJ IDEA
+3. Run `./gradlew buildPlugin` to build a `.zip` that can be imported as gradle plugin or execute the following Gradle task to build and execute an IntelliJ instance:
+`./gradlew runIde`
+
 
 ## To Implement
 - [ ] Maven Support
