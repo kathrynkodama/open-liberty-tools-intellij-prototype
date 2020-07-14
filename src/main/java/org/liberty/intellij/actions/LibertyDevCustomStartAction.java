@@ -33,6 +33,8 @@ public class LibertyDevCustomStartAction extends AnAction {
 
         String customParams = Messages.showInputDialog("Specify custom parameters for the liberty dev command (e.g. -DhotTests=true)", "Liberty Dev Custom Parameters",  Messages.getQuestionIcon());
 
+        //TODO: check if cancelling custom start should not start dev command
+
         String startCmd = null;
         if (projectType.equals(Constants.LIBERTY_MAVEN_PROJECT)) {
             startCmd = "mvn io.openliberty.tools:liberty-maven-plugin:dev " + customParams + " -f \"" + file.getCanonicalPath() + "\"";

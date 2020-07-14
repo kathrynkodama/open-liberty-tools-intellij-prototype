@@ -29,6 +29,8 @@ public class RefreshLibertyToolbar extends AnAction {
         final Project project = LibertyProjectUtil.getProject(e.getDataContext());
         if (project == null) return;
 
+        //TODO: implement refresh functionality
+
         ToolWindow libertyDevToolWindow = ToolWindowManager.getInstance(project).getToolWindow(Constants.LIBERTY_DEV_DASHBOARD_ID);
 //        Tree tree = LibertyExplorer.buildTree(project, Color.g);
 

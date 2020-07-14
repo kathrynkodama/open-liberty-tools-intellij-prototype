@@ -1,7 +1,7 @@
 # Open Liberty Tools IntelliJ Plugin (Prototype)
 
 This extension will detect Liberty Maven projects in your
-workspace.  Through the Liberty Dev Dashboard, you can sart,
+workspace.  Through the Liberty Dev Dashboard, you can start,
 stop, or interact with Liberty dev mode on all available 
 [Liberty Maven](https://github.com/OpenLiberty/ci.maven/blob/master/docs/dev.md#dev) projects in your workspace.
 
@@ -9,7 +9,7 @@ Note that this extension requires the [Integrated Terminal plugin](https://plugi
 
 
 ## Developing
-The project is built using the built in [gradle-intellij-plugin](https://github.com/JetBrains/gradle-intellij-plugin/).
+Developing this extension using the built-in [gradle-intellij-plugin](https://github.com/JetBrains/gradle-intellij-plugin/).
 
 1. Clone this repository: `git clone git@github.com:kathrynkodama/open-liberty-tools-intellij.git`
 2. Import this repository as a gradle project in IntelliJ IDEA
@@ -24,12 +24,12 @@ The project is built using the built in [gradle-intellij-plugin](https://github.
     - [x] Stop dev mode
     - [x] Custom start dev mode
     - [x] Run tests
-    - [ ] View integration test report
-    - [ ] View unit test report
+    - [x] View integration test report (opens in a browser using `BrowserUtil.browse(...)`)
+    - [x] View unit test report (opens in a browser using `BrowserUtil.browse(...)`)
     - [ ] Support multi-module projects
     
 - [ ] Gradle Support
-    - [ ] Detect whether `io.openliberty.tools:liberty-maven-plugin` is in the `pom.xml` (in build tag or profiles tag)
+    - [ ] Detect whether `io.openliberty.tools:liberty-maven-plugin` is in the `build.gradle`
     - [ ] Start dev mode
     - [ ] Stop dev mode
     - [ ] Custom start dev mode
@@ -45,5 +45,5 @@ The project is built using the built in [gradle-intellij-plugin](https://github.
     - [ ] Validate user inputted custom start parameters
     - [ ] Display a warning message if user selects `Stop dev mode` or `Run tests` and if terminal session does not exist
     - [ ] Implement proper logging
-    - [ ] Setting java home environment variable (this is done in the VS Code extension, investigate if there is something similar in IntellIJ)
+    - [ ] Setting java home environment variable (this is done in the VS Code extension, investigate if there is something similar in intelliJ)
     

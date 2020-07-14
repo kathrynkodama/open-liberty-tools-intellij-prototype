@@ -62,11 +62,21 @@
         <action id="org.liberty.intellij.actions.LibertyDevRunTestsAction"
                 class="org.liberty.intellij.actions.LibertyDevRunTestsAction" text="Run Tests"
                 description="Run tests on current build file" icon="AllIcons.General.GearPlain" />
+
+        <action id="org.liberty.intellij.actions.ViewIntegrationTestReport"
+                class="org.liberty.intellij.actions.ViewIntegrationTestReport" text="View integration test report"
+                description="Open the Maven Failsafe test report" icon="AllIcons.General.GearPlain" />
+
+        <action id="org.liberty.intellij.actions.ViewUnitTestReport"
+                class="org.liberty.intellij.actions.ViewUnitTestReport" text="View unit test report"
+                description="Open the Maven Surefire test report" icon="AllIcons.General.GearPlain" />
+
         <action id="org.liberty.intellij.actions.ViewEffectivePom"
                 class="org.liberty.intellij.actions.ViewEffectivePom" text="View effective pom"
                 description="Open the pom.xml" icon="AllIcons.General.GearPlain" />
+
         <action id="org.liberty.intellij.actions.RefreshLibertyToolbar"
                 class="org.liberty.intellij.actions.RefreshLibertyToolbar" text="Refresh Liberty Dev Dashboard"
-                description="Refresh Liberty Dev Dashboard proejcts" icon="AllIcons.Actions.Refresh"/>
+                description="Refresh Liberty Dev Dashboard projects" icon="AllIcons.Actions.Refresh"/>
     </actions>
 </idea-plugin>
