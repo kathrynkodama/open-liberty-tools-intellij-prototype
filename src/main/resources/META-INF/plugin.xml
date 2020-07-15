@@ -72,7 +72,7 @@
                 description="Open the Maven Surefire test report" icon="AllIcons.General.GearPlain" />
 
         <action id="org.liberty.intellij.actions.ViewEffectivePom"
-                class="org.liberty.intellij.actions.ViewEffectivePom" text="View effective pom"
+                class="org.liberty.intellij.actions.ViewEffectivePom" text="View Effective POM"
                 description="Open the pom.xml" icon="AllIcons.General.GearPlain" />
 
         <action id="org.liberty.intellij.actions.RefreshLibertyToolbar"

@@ -3,7 +3,6 @@ package org.liberty.intellij.util;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiFile;
@@ -16,16 +15,7 @@ import org.jetbrains.plugins.terminal.AbstractTerminalRunner;
 import org.jetbrains.plugins.terminal.ShellTerminalWidget;
 import org.jetbrains.plugins.terminal.TerminalTabState;
 import org.jetbrains.plugins.terminal.TerminalView;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -36,55 +26,31 @@ public class LibertyProjectUtil {
         return CommonDataKeys.PROJECT.getData(context);
     }
 
-
-    // returns build.gradle and pom.xml files for the current project
-    public  static ArrayList<PsiFile> getBuildFiles(Project project) {
-        ArrayList<PsiFile> buildFiles = new ArrayList<PsiFile>();
-
-//        // Gradle support
-//        PsiFile[] gradleFiles = FilenameIndex.getFilesByName(project, "build.gradle", GlobalSearchScope.projectScope(project));
-//        for (int i = 0; i < gradleFiles.length; i++) {
-//            System.out.println(gradleFiles[i].getVirtualFile().getPath());
-//            buildFiles.add(gradleFiles[i]);
-//        }
-
-        PsiFile[] mavenFiles = FilenameIndex.getFilesByName(project, "pom.xml", GlobalSearchScope.projectScope(project));
-        for (int i = 0; i < mavenFiles.length; i++) {
-            System.out.println(mavenFiles[i].getVirtualFile().getPath());
-            try {
-                if (validPom(mavenFiles[i])) {
-                    buildFiles.add(mavenFiles[i]);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Error parsing pom.xml");
-            }
-        }
-        return buildFiles;
+    /**
+     * Returns a list of valid Gradle build files in the project
+     * @param project
+     * @return ArrayList of PsiFiles
+     */
+    public static ArrayList<PsiFile> getGradleBuildFiles(Project project) {
+        return getBuildFiles(project, Constants.LIBERTY_GRADLE_PROJECT);
     }
 
-    public static String getProjectNameFromPom(VirtualFile file) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-
-        File inputFile = new File(file.getCanonicalPath());
-        Document doc = builder.parse(inputFile);
-
-        doc.getDocumentElement().normalize();
-        Node root = doc.getDocumentElement();
-
-        NodeList nList = root.getChildNodes();
-        for (int temp = 0; temp < nList.getLength(); temp++) {
-            Node nNode = nList.item(temp);
-            if (nNode.getNodeName().equals("artifactId")) {
-                if (nNode.getTextContent() != null) {
-                    return nNode.getTextContent();
-                }
-            }
-        }
-        return null;
+    /**
+     * Returns a list of valid Maven build files in the project
+     * @param project
+     * @return ArrayList of PsiFiles
+     */
+    public static ArrayList<PsiFile> getMavenBuildFiles(Project project) {
+        return getBuildFiles(project, Constants.LIBERTY_MAVEN_PROJECT);
     }
 
+    /**
+     * Get the terminal widget for the current project
+     * @param project
+     * @param projectName
+     * @param createWidget true if a new widget should be created
+     * @return ShellTerminalWidget object
+     */
     public static ShellTerminalWidget getTerminalWidget(Project project, String projectName, boolean createWidget) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow terminalWindow = toolWindowManager.getToolWindow("Terminal");
@@ -106,6 +72,40 @@ public class LibertyProjectUtil {
         return null;
     }
 
+    // returns valid build files for the current project
+    private static ArrayList<PsiFile> getBuildFiles(Project project, String buildFileType) {
+        ArrayList<PsiFile> buildFiles = new ArrayList<PsiFile>();
+
+        if (buildFileType.equals(Constants.LIBERTY_MAVEN_PROJECT)) {
+            PsiFile[] mavenFiles = FilenameIndex.getFilesByName(project, "pom.xml", GlobalSearchScope.projectScope(project));
+            for (int i = 0; i < mavenFiles.length; i++) {
+                System.out.println(mavenFiles[i].getVirtualFile().getPath());
+                try {
+                    if (LibertyMavenUtil.validPom(mavenFiles[i])) {
+                        buildFiles.add(mavenFiles[i]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Error parsing pom.xml");
+                }
+            }
+        } else if (buildFileType.equals(Constants.LIBERTY_GRADLE_PROJECT)) {
+            PsiFile[] gradleFiles = FilenameIndex.getFilesByName(project, "build.gradle", GlobalSearchScope.projectScope(project));
+            for (int i = 0; i < gradleFiles.length; i++) {
+                System.out.println(gradleFiles[i].getVirtualFile().getPath());
+                try {
+                    if (LibertyGradleUtil.validBuildGradle(gradleFiles[i])) {
+                        buildFiles.add(gradleFiles[i]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Error parsing build.gradle");
+                }
+            }
+        }
+        return buildFiles;
+    }
+
     private static ShellTerminalWidget getTerminalWidget(ToolWindow terminalWindow, String projectName) {
         Content[] terminalContents = terminalWindow.getContentManager().getContents();
         for (int i = 0; i < terminalContents.length; i++) {
@@ -117,77 +117,5 @@ public class LibertyProjectUtil {
         }
         return null;
     }
-
-    private static boolean validPom(PsiFile file) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-
-        File inputFile = new File(file.getVirtualFile().getCanonicalPath());
-        Document doc = builder.parse(inputFile);
-
-        doc.getDocumentElement().normalize();
-        Node root = doc.getDocumentElement();
-
-        NodeList nList = root.getChildNodes();
-        for (int temp = 0; temp < nList.getLength(); temp++) {
-            Node nNode = nList.item(temp);
-
-            // check for liberty maven plugin in profiles
-            if (nNode.getNodeName().equals("profiles")) {
-                NodeList profiles = nNode.getChildNodes();
-                for (int i = 0; i < profiles.getLength(); i++) {
-                    Node profile = profiles.item(i);
-                    if (profile.getNodeName().equals("profile")) {
-                        NodeList profileList = profile.getChildNodes();
-                        for (int j = 0; j < profileList.getLength(); j++) {
-                            if (profileList.item(j).getNodeName().equals("build")) {
-                                NodeList buildNodeList = profileList.item(j).getChildNodes();
-                                if (mavenPluginDetected(buildNodeList)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // check for liberty maven plugin in plugins
-            if (nNode.getNodeName().equals("build")) {
-                NodeList buildNodeList = nNode.getChildNodes();
-                if (mavenPluginDetected(buildNodeList)) {
-                    return true;
-                }
-            }
-
-        }
-        return false;
-    }
-
-    private static boolean mavenPluginDetected (NodeList buildNodeList) {
-        for (int i = 0; i < buildNodeList.getLength(); i++) {
-            Node buildNode = buildNodeList.item(i);
-            if (buildNode.getNodeName().equals("plugins")) {
-                NodeList plugins = buildNode.getChildNodes();
-                for (int j = 0; j < plugins.getLength(); j++) {
-                    NodeList plugin = plugins.item(j).getChildNodes();
-                    boolean groupId = false;
-                    boolean artifactId = false;
-                    for (int k = 0; k < plugin.getLength(); k++) {
-                        Node node = plugin.item(k);
-                        if (node.getNodeName().equals("groupId") && node.getTextContent().equals("io.openliberty.tools")) {
-                            groupId = true;
-                        } else if (node.getNodeName().equals("artifactId") && node.getTextContent().equals("liberty-maven-plugin")) {
-                            artifactId = true;
-                        }
-                        if (groupId && artifactId) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
 
 }

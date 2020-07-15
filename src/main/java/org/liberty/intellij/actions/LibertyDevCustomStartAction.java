@@ -11,8 +11,6 @@ import org.liberty.intellij.util.Constants;
 import org.liberty.intellij.util.LibertyActionUtil;
 import org.liberty.intellij.util.LibertyProjectUtil;
 
-import java.io.IOException;
-
 public class LibertyDevCustomStartAction extends AnAction {
 
     @Override
@@ -31,13 +29,21 @@ public class LibertyDevCustomStartAction extends AnAction {
         final String projectName = (String) e.getDataContext().getData(Constants.LIBERTY_PROJECT_NAME);
         final String projectType = (String) e.getDataContext().getData(Constants.LIBERTY_PROJECT_TYPE);
 
-        String customParams = Messages.showInputDialog("Specify custom parameters for the liberty dev command (e.g. -DhotTests=true)", "Liberty Dev Custom Parameters",  Messages.getQuestionIcon());
+        String msg;
+        if (projectType.equals(Constants.LIBERTY_MAVEN_PROJECT)) {
+            msg = "Specify custom parameters for the liberty dev command (e.g. -DhotTests=true)";
+        } else {
+            msg = "Specify custom parameters for the liberty dev command (e.g. --hotTests)";
+        }
+        String customParams = Messages.showInputDialog(msg, "Liberty Dev Custom Parameters",  Messages.getQuestionIcon());
 
         //TODO: check if cancelling custom start should not start dev command
 
         String startCmd = null;
         if (projectType.equals(Constants.LIBERTY_MAVEN_PROJECT)) {
             startCmd = "mvn io.openliberty.tools:liberty-maven-plugin:dev " + customParams + " -f \"" + file.getCanonicalPath() + "\"";
+        } else if (projectType.equals(Constants.LIBERTY_GRADLE_PROJECT)) {
+            startCmd = "gradle libertyDev " + customParams + " -b=" + file.getCanonicalPath();
         }
 
         ShellTerminalWidget widget = LibertyProjectUtil.getTerminalWidget(project, projectName, true);

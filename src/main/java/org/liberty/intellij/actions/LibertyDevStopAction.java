@@ -26,7 +26,7 @@ public class LibertyDevStopAction extends AnAction {
 
         final String projectName = (String) e.getDataContext().getData(Constants.LIBERTY_PROJECT_NAME);
 
-        String stopCmd = "q";
+        String stopCmd = "exit";
 
         ShellTerminalWidget widget = LibertyProjectUtil.getTerminalWidget(project, projectName, false);
 

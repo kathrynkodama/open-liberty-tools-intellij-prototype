@@ -26,15 +26,18 @@ Developing this extension using the built-in [gradle-intellij-plugin](https://gi
     - [x] Run tests
     - [x] View integration test report (opens in a browser using `BrowserUtil.browse(...)`)
     - [x] View unit test report (opens in a browser using `BrowserUtil.browse(...)`)
+    - [x] View Effective Pom
     - [ ] Support multi-module projects
     
 - [ ] Gradle Support
-    - [ ] Detect whether `io.openliberty.tools:liberty-maven-plugin` is in the `build.gradle`
-    - [ ] Start dev mode
-    - [ ] Stop dev mode
-    - [ ] Custom start dev mode
-    - [ ] Run tests
+    - [ ] Detect whether `io.openliberty.tools:liberty-maven-plugin` is in the `build.gradle` (currently reading 
+    the `build.gradle` with File IO) 
+    - [x] Start dev mode
+    - [x] Stop dev mode
+    - [x] Custom start dev mode
+    - [x] Run tests
     - [ ] View test report
+    - [ ] View Gradle Config
     - [ ] Support multi-module projects
 
 - Action Bar in Liberty Dev Tool Window
@@ -46,4 +49,5 @@ Developing this extension using the built-in [gradle-intellij-plugin](https://gi
     - [ ] Display a warning message if user selects `Stop dev mode` or `Run tests` and if terminal session does not exist
     - [ ] Implement proper logging
     - [ ] Setting java home environment variable (this is done in the VS Code extension, investigate if there is something similar in intelliJ)
+    - [ ] Start... to provide selectable options (see https://github.com/OpenLiberty/liberty-dev-vscode-ext/issues/60)
     

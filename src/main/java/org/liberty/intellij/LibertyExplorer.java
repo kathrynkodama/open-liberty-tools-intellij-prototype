@@ -1,7 +1,6 @@
 package org.liberty.intellij;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -10,22 +9,17 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
-import org.liberty.intellij.util.Constants;
-import org.liberty.intellij.util.LibertyProjectUtil;
-import org.liberty.intellij.util.TreeDataProvider;
+import org.liberty.intellij.util.*;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -53,22 +47,25 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
     public static Tree buildTree(Project project, Color backgroundColor) {
         String projectName = null;
         ArrayList<PsiFile> buildFiles = null;
+        ArrayList<PsiFile> mavenBuildFiles = null;
+        ArrayList<PsiFile> gradleBuildFiles = null;
         try {
-            buildFiles = LibertyProjectUtil.getBuildFiles(project);
+            mavenBuildFiles = LibertyProjectUtil.getMavenBuildFiles(project);
+            gradleBuildFiles = LibertyProjectUtil.getGradleBuildFiles(project);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Root node");
 
-        for (PsiFile file : buildFiles) {
+        for (PsiFile file : mavenBuildFiles) {
             VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile == null) {
                 throw new Error("Could not resolve current project");
             }
             LibertyProjectNode node;
             try {
-                projectName = LibertyProjectUtil.getProjectNameFromPom(virtualFile);
+                projectName = LibertyMavenUtil.getProjectNameFromPom(virtualFile);
 
             } catch (Exception e) {
                 throw new Error("Could not resolve project name from pom.xml", e);
@@ -79,13 +76,35 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
                 node = new LibertyProjectNode(file, project.getName(), Constants.LIBERTY_MAVEN_PROJECT);
             }
             top.add(node);
-
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_START));
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_CUSTOM_START));
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_STOP));
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_TESTS));
             node.add(new LibertyActionNode(Constants.VIEW_INTEGRATION_TEST_REPORT));
             node.add(new LibertyActionNode(Constants.VIEW_UNIT_TEST_REPORT));
+        }
+
+        for (PsiFile file : gradleBuildFiles) {
+            VirtualFile virtualFile = file.getVirtualFile();
+            if (virtualFile == null) {
+                throw new Error("Could not resolve current project");
+            }
+            LibertyProjectNode node;
+            try {
+                projectName = LibertyGradleUtil.getProjectName(virtualFile);
+            } catch (Exception e) {
+                throw new Error("Could not resolve project name from settings.gradle", e);
+            }
+            if (projectName != null) {
+                node = new LibertyProjectNode(file, projectName, Constants.LIBERTY_GRADLE_PROJECT);
+            } else {
+                node = new LibertyProjectNode(file, project.getName(), Constants.LIBERTY_GRADLE_PROJECT);
+            }
+            top.add(node);
+            node.add(new LibertyActionNode(Constants.LIBERTY_DEV_START));
+            node.add(new LibertyActionNode(Constants.LIBERTY_DEV_CUSTOM_START));
+            node.add(new LibertyActionNode(Constants.LIBERTY_DEV_STOP));
+            node.add(new LibertyActionNode(Constants.LIBERTY_DEV_TESTS));
         }
 
         Tree tree = new Tree(top);
@@ -123,11 +142,18 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
                 if (path != null) {
                     Object node = path.getLastPathComponent();
                     if (node instanceof LibertyProjectNode) {
+                        LibertyProjectNode libertyNode = ((LibertyProjectNode) node);
                         final DefaultActionGroup group = new DefaultActionGroup();
-                        if (((LibertyProjectNode) node).getProjectType().equals(Constants.LIBERTY_MAVEN_PROJECT)) {
+                        if (libertyNode.getProjectType().equals(Constants.LIBERTY_MAVEN_PROJECT)) {
                             AnAction viewEffectivePom = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewEffectivePom");
                             group.add(viewEffectivePom);
+                            AnAction viewIntegrationReport = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewIntegrationTestReport");
+                            group.add(viewIntegrationReport);
+                            AnAction viewUnitTestReport = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewUnitTestReport");
+                            group.add(viewUnitTestReport);
                             group.addSeparator();
+                        } else if (libertyNode.getProjectType().equals(Constants.LIBERTY_GRADLE_PROJECT)) {
+                            //TODO: add view build.gradle and view test report for gradle
                         }
                         AnAction startAction = ActionManager.getInstance().getAction("org.liberty.intellij.actions.LibertyDevStartAction");
                         group.add(startAction);
@@ -137,10 +163,6 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
                         group.add(stopAction);
                         AnAction runTestsAction = ActionManager.getInstance().getAction("org.liberty.intellij.actions.LibertyDevRunTestsAction");
                         group.add(runTestsAction);
-                        AnAction viewIntegrationReport = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewIntegrationTestReport");
-                        group.add(viewIntegrationReport);
-                        AnAction viewUnitTestReport = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewUnitTestReport");
-                        group.add(viewUnitTestReport);
 
                         ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
                         menu.getComponent().show(comp, x, y);

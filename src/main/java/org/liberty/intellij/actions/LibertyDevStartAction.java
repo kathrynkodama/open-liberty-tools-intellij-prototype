@@ -3,17 +3,11 @@ package org.liberty.intellij.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.jediterm.terminal.TtyConnector;
-import com.jediterm.terminal.ui.TerminalSession;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.terminal.ShellTerminalWidget;
 import org.liberty.intellij.util.LibertyActionUtil;
 import org.liberty.intellij.util.LibertyProjectUtil;
 import org.liberty.intellij.util.Constants;
-
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class LibertyDevStartAction extends AnAction {
 
@@ -36,6 +30,8 @@ public class LibertyDevStartAction extends AnAction {
         String startCmd = null;
         if (projectType.equals(Constants.LIBERTY_MAVEN_PROJECT)) {
             startCmd = "mvn io.openliberty.tools:liberty-maven-plugin:dev -f \"" + file.getCanonicalPath() + "\"";
+        } else if (projectType.equals(Constants.LIBERTY_GRADLE_PROJECT)) {
+            startCmd = "gradle libertyDev -b=" + file.getCanonicalPath();
         }
 
         ShellTerminalWidget widget = LibertyProjectUtil.getTerminalWidget(project, projectName, true);
