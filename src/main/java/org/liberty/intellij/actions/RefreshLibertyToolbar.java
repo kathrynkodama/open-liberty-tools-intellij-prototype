@@ -3,8 +3,6 @@ package org.liberty.intellij.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
@@ -14,7 +12,7 @@ import org.liberty.intellij.LibertyExplorer;
 import org.liberty.intellij.util.Constants;
 import org.liberty.intellij.util.LibertyProjectUtil;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.*;
 import java.awt.*;
 
 public class RefreshLibertyToolbar extends AnAction {
@@ -29,17 +27,22 @@ public class RefreshLibertyToolbar extends AnAction {
         final Project project = LibertyProjectUtil.getProject(e.getDataContext());
         if (project == null) return;
 
-        //TODO: implement refresh functionality
-
         ToolWindow libertyDevToolWindow = ToolWindowManager.getInstance(project).getToolWindow(Constants.LIBERTY_DEV_DASHBOARD_ID);
-//        Tree tree = LibertyExplorer.buildTree(project, Color.g);
 
+        Content content = libertyDevToolWindow.getContentManager().findContent("Projects");
 
-        Content content =  libertyDevToolWindow.getContentManager().findContent("Projects");
-        Component comp = content.getComponent();
+        JComponent libertyWindow = content.getComponent();
 
-//        comp.repaint();
-//        System.out.println(content.getTabName());
-//        content.getManager().setSelectedContent((Content) tree);
+        libertyWindow.list();
+        Component[] components = libertyWindow.getComponents();
+
+        for (Component comp: components) {
+            if (comp.getName() != null && comp.getName().equals(Constants.LIBERTY_TREE)) {
+                Tree tree = LibertyExplorer.buildTree(project, content.getComponent().getBackground());
+                content.getComponent().remove(comp);
+                content.getComponent().add(tree);
+            }
+        }
+
     }
 }

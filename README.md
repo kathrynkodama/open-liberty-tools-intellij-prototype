@@ -30,7 +30,8 @@ Developing this extension using the built-in [gradle-intellij-plugin](https://gi
     - [ ] Support multi-module projects
     
 - [ ] Gradle Support
-    - [x] Detect whether `io.openliberty.tools:liberty-maven-plugin` is in the `build.gradle` (with File IO and regex) 
+    - [x] Detect whether `io.openliberty.tools:liberty-maven-plugin` is in the `build.gradle` (with File IO and regex. 
+    NOTE: comments in the `build.gradle` are not handled yet) 
     - [x] Start dev mode
     - [x] Stop dev mode
     - [x] Custom start dev mode
@@ -40,7 +41,7 @@ Developing this extension using the built-in [gradle-intellij-plugin](https://gi
     - [ ] Support multi-module projects
 
 - Action Bar in Liberty Dev Tool Window
-    - [ ] Refresh button
+    - [x] Refresh button
     - [ ] Execute selected dev task button
 
 - Misc.

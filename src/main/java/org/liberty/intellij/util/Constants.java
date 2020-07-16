@@ -18,6 +18,7 @@ public final class Constants {
     public static final String VIEW_TEST_REPORT = "View test report";
     public static final String TEST_REPORT_STRING = "Test Summary";
 
+    public static final String LIBERTY_TREE = "LibertyTree";
     /**
      * Constants for Data Context, passing information between the tree nodes and the Actions
      */

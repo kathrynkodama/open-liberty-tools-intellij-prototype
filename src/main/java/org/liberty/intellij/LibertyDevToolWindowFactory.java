@@ -17,7 +17,6 @@ final class LibertyDevToolWindowFactory implements ToolWindowFactory {
         LibertyExplorer explorer = new LibertyExplorer(project);
         ContentManager contentManager = toolWindow.getContentManager();
         Content content = contentManager.getFactory().createContent(explorer, "Projects", false);
-
         contentManager.addContent(content);
     }
 }

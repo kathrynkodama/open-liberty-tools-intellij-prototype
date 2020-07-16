@@ -135,7 +135,6 @@ public class ViewTestReport extends AnAction {
             e.printStackTrace();
         }
 
-
         return null;
     }
 }
