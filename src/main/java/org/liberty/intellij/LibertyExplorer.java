@@ -105,6 +105,7 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_CUSTOM_START));
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_STOP));
             node.add(new LibertyActionNode(Constants.LIBERTY_DEV_TESTS));
+            node.add(new LibertyActionNode(Constants.VIEW_TEST_REPORT));
         }
 
         Tree tree = new Tree(top);
@@ -153,7 +154,11 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
                             group.add(viewUnitTestReport);
                             group.addSeparator();
                         } else if (libertyNode.getProjectType().equals(Constants.LIBERTY_GRADLE_PROJECT)) {
-                            //TODO: add view build.gradle and view test report for gradle
+                            AnAction viewGradleConfig = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewGradleConfig");
+                            group.add(viewGradleConfig);
+                            AnAction viewTestReport = ActionManager.getInstance().getAction("org.liberty.intellij.actions.ViewTestReport");
+                            group.add(viewTestReport);
+                            group.addSeparator();
                         }
                         AnAction startAction = ActionManager.getInstance().getAction("org.liberty.intellij.actions.LibertyDevStartAction");
                         group.add(startAction);
@@ -202,6 +207,10 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
                                 ActionManager.getInstance(), 0));
                     } else if (actionNodeName.equals(Constants.VIEW_UNIT_TEST_REPORT)) {
                         am.getAction("org.liberty.intellij.actions.ViewUnitTestReport").actionPerformed(new AnActionEvent(null, DataManager.getInstance().getDataContext(),
+                                ActionPlaces.UNKNOWN, new Presentation(),
+                                ActionManager.getInstance(), 0));
+                    } else if (actionNodeName.equals(Constants.VIEW_TEST_REPORT)) {
+                        am.getAction("org.liberty.intellij.actions.ViewTestReport").actionPerformed(new AnActionEvent(null, DataManager.getInstance().getDataContext(),
                                 ActionPlaces.UNKNOWN, new Presentation(),
                                 ActionManager.getInstance(), 0));
                     }

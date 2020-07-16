@@ -32,11 +32,11 @@ public class ViewIntegrationTestReport extends AnAction {
 
         // get path to project folder
         final VirtualFile parentFile = file.getParent();
-        File failsafeReportFile = Paths.get(parentFile.getCanonicalPath(), "target", "site", "failsafe-report.html").toAbsolutePath().toFile();
+        File failsafeReportFile = Paths.get(parentFile.getCanonicalPath(), "target", "site", "failsafe-report.html").normalize().toAbsolutePath().toFile();
         VirtualFile failsafeReportVirtualFile = LocalFileSystem.getInstance().findFileByIoFile(failsafeReportFile);
 
 
-        if (!failsafeReportFile.exists()) {
+        if (failsafeReportVirtualFile == null || !failsafeReportVirtualFile.exists()) {
             Messages.showErrorDialog(project, "Test report (" + failsafeReportFile.getAbsolutePath() + ") does not exist.  " +
                             "Run tests to generate a test report.  Ensure your test report is generating at the correct location.",
                     "Integration Test Report Does Not Exist");

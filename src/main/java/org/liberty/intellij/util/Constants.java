@@ -10,9 +10,13 @@ public final class Constants {
     public static final String LIBERTY_DEV_STOP = "Stop";
     public static final String LIBERTY_DEV_TESTS = "Run Tests";
 
-    // maven
+    // Maven
     public static final String VIEW_INTEGRATION_TEST_REPORT = "View integration test report";
     public static final String VIEW_UNIT_TEST_REPORT = "View unit test report";
+
+    // Gradle
+    public static final String VIEW_TEST_REPORT = "View test report";
+    public static final String TEST_REPORT_STRING = "Test Summary";
 
     /**
      * Constants for Data Context, passing information between the tree nodes and the Actions
