@@ -3,7 +3,8 @@
 This extension will detect Liberty Maven projects in your
 workspace.  Through the Liberty Dev Dashboard, you can start,
 stop, or interact with Liberty dev mode on all available 
-[Liberty Maven](https://github.com/OpenLiberty/ci.maven/blob/master/docs/dev.md#dev) projects in your workspace.
+[Liberty Maven](https://github.com/OpenLiberty/ci.maven/blob/master/docs/dev.md#dev) 
+and [Liberty Gradle](https://github.com/OpenLiberty/ci.gradle/blob/master/docs/libertyDev.md) projects in your workspace.
 
 Note that this extension requires the [Integrated Terminal plugin](https://plugins.jetbrains.com/plugin/13123-terminal) to be enabled.
 
