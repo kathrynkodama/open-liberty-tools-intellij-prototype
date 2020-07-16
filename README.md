@@ -1,6 +1,6 @@
 # Open Liberty Tools IntelliJ Plugin (Prototype)
 
-This extension will detect Liberty Maven projects in your
+This extension will detect Liberty Maven or Liberty Gradle projects in your
 workspace.  Through the Liberty Dev Dashboard, you can start,
 stop, or interact with Liberty dev mode on all available 
 [Liberty Maven](https://github.com/OpenLiberty/ci.maven/blob/master/docs/dev.md#dev) 
